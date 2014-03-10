@@ -1,4 +1,4 @@
 angularjs-visualstudio-intellisense
 ===================================
 
-A Visual Studio Intellisense extension that provides statement completion for injected AngularJS components in JavaScript files.
+This project provides intellisense in JavaScript files for injected AngularJS components in Visual Studio.
