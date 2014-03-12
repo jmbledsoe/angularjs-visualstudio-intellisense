@@ -5,10 +5,15 @@
         // logProvider.
     }]);
 
+    testApp.constant('testConstant', { foo: 1, bar: 2 });
+
     // Create a test provider.
-    testApp.provider('testComponent', ['$logProvider', function (logProvider) {
+    testApp.provider('testComponent', ['$logProvider', 'testConstant', function (logProvider, constant) {
         // Test: Providers can be injected into other provider functions.
         // logProvider.
+
+        // Test: Constants can be injected into provider functions.
+        // constant.
 
         this.someProviderField = 42;
         this.someProviderFunction = function () {
@@ -16,7 +21,7 @@
         };
 
         this.$get = ['$q', function ($q) {
-            // Test: Components can be injected into inline functions. (FAIL)
+            // Test: Components can be injected into inline functions.
             // $q.
 
             return {
@@ -50,6 +55,28 @@
         // Test: Components can be injected into factory functions.
         // $q.
         // factory.
+
+        this.someServiceField = 42;
+        this.someServiceFunction = function() {
+
+        };
+    }]);
+
+    // Create a test controller.
+    testApp.controller('testController', ['$q', 'testFactory', 'testService', function ($q, factory, service) {
+        // Test: Components can be injected into controllers.
+        // $q.
+        // factory.
+        // service.
+    }]);
+
+    // Create a test module config function.
+    testApp.config(['testConstant', 'testComponentProvider', function (constant, provider) {
+        // Test: Constants can be injected into config functions.
+        // constant.
+
+        // Test: Providers can be injected into config functions.
+        // provider.
     }]);
     
 })(angular);
