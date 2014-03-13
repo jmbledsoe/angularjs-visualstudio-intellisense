@@ -135,10 +135,12 @@
 
             module[providerFunction] = function () {
                 // Call the original component type function.
-                originalProviderFunction.apply(module, arguments);
+                var returnValue = originalProviderFunction.apply(module, arguments);
 
                 // Initialize components.
                 initializeComponents(providerFunction, module._invokeQueue);
+
+                return returnValue;
             };
         });
     }
