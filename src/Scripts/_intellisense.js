@@ -1,5 +1,7 @@
 ﻿(function () {
 
+    if (!angular) return;
+
     //#region Logging Functions
     function indent(level) {
         var pad = '  '; // Two-space pad.
@@ -335,4 +337,12 @@
     }
 
     //#endregion
+
+    intellisense.addEventListener('statementcompletion', function (event) {
+        var filterRegex = /^\$\$.*/;
+
+        event.items = event.items.filter(function (item) {
+            return !filterRegex.test(item.name);
+        });
+    });
 })();
