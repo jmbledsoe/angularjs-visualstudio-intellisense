@@ -93,6 +93,26 @@
     var providerSuffix = 'Provider';
     var providerSuffixRegex = /Provider$/;
 
+    // Search the window object for globally-defined angular modules, and track them if they are found.
+    if (window) {
+        forEach(window, function (obj) {
+            if (isAngularModule(obj)) {
+                trackModule(obj);
+            }
+        });
+    }
+
+    function isAngularModule(obj) {
+        // Angular modules all have names and invoke queues and core provider functions.
+        return angular.isString(obj.name) &&
+            angular.isArray(obj._invokeQueue) &&
+            angular.isFunction(obj.provider) &&
+            angular.isFunction(obj.constant) &&
+            angular.isFunction(obj.value) &&
+            angular.isFunction(obj.factory) &&
+            angular.isFunction(obj.service);
+    }
+
     // Decorate the angular.module function to record the name of each module as it is registered.
     var originalModuleFunction = angular.module;
 
@@ -111,11 +131,20 @@
         return returnValue;
     };
 
-    function trackModule(moduleName) {
-        if (moduleNames.indexOf(moduleName) == -1) {
-            // Get the angular module.
-            var module = originalModuleFunction(moduleName);
+    function trackModule(moduleOrName) {
+        var moduleName, module;
 
+        if (angular.isString(moduleOrName)) {
+            // If the argument is a module name, retrieve the module from the angular.module function.
+            moduleName = moduleOrName;
+            module = originalModuleFunction(moduleName);
+        } else {
+            // Otherwise the argument is a module, so get the name from its name property.
+            module = moduleOrName;
+            moduleName = module.name;
+        }
+
+        if (moduleNames.indexOf(moduleName) == -1) {
             // Recursively process dependent modules.
             forEach(module.requires, trackModule);
 
@@ -132,18 +161,23 @@
 
         // Initialize each component with empty object dependencies. 
         forEach(moduleProviderFunctions, function (providerFunction) {
+
             // Decorate the component type function to call component functions with empty object parameters.
             var originalProviderFunction = module[providerFunction];
+            
+            // Only decorate the provider function if the module has it (which it may not for animate).
+            if (originalProviderFunction) {
+                module[providerFunction] = function () {
+                    
+                    // Call the original component type function.
+                    var returnValue = originalProviderFunction.apply(module, arguments);
 
-            module[providerFunction] = function () {
-                // Call the original component type function.
-                var returnValue = originalProviderFunction.apply(module, arguments);
+                    // Initialize components.
+                    initializeComponents(providerFunction, module._invokeQueue);
 
-                // Initialize components.
-                initializeComponents(providerFunction, module._invokeQueue);
-
-                return returnValue;
-            };
+                    return returnValue;
+                };
+            }
         });
     }
     function trackComponent(component) {
@@ -171,7 +205,7 @@
         forEach(comps, function (comp) {
             // Only initialize the component if it is the appropriate type.
             if (componentMatchesProviderFunction(comp, providerFunction)) {
-                initialize(injector, comp[2][1])                
+                initialize(injector, comp[2][1])
             }
         });
     }
@@ -185,7 +219,7 @@
                 dependencies.push(createInstance(injector, dependencyName));
             });
         }
-        
+
         // Find the component initialization function.
         var initializeFunction;
 
@@ -252,7 +286,7 @@
             return injector.get('$rootScope');
         } else {
             var component = components[name];
-            
+
             if (component[0] == '$provide' && component[1] == 'value') {
                 // If the component is a value (registered by angular.mock.module), just return it.
                 return component[2][1];
@@ -280,7 +314,7 @@
             { source: angular.mock, method: 'module' },
             { source: angular.mock, method: 'inject' }
         ];
-    
+
         var injector = undefined;
 
         forEach(overrides, function (override) {
@@ -290,7 +324,7 @@
 
             // Override the original method.
             var originalMethod = source[method];
-        
+
             source[method] = function () {
                 // Call the original method.
                 originalMethod.apply(source, arguments);
@@ -305,7 +339,7 @@
                             // TODO: Inject the module config function if it's an array.
                             argument();
                         } else if (angular.isObject(argument)) {
-                            angular.forEach(argument, function(value, key) { 
+                            angular.forEach(argument, function (value, key) {
                                 // Register a value component for each object property (like angular.mock.module does).
                                 components[key] = [
                                     '$provide',
@@ -346,3 +380,4 @@
         });
     });
 })();
+
