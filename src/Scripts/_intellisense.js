@@ -1,6 +1,8 @@
 ﻿(function () {
 
-    if (!angular) return;
+    if (!angular) {
+        return;
+    }
 
     //#region Logging Functions
     function indent(level) {
@@ -205,7 +207,7 @@
         forEach(comps, function (comp) {
             // Only initialize the component if it is the appropriate type.
             if (componentMatchesProviderFunction(comp, providerFunction)) {
-                initialize(injector, comp[2][1])
+                initialize(injector, comp[2][1]);
             }
         });
     }
@@ -315,7 +317,7 @@
             { source: angular.mock, method: 'inject' }
         ];
 
-        var injector = undefined;
+        var injector;
 
         forEach(overrides, function (override) {
             // Extract source and method from the override.
@@ -380,4 +382,3 @@
         });
     });
 })();
-
