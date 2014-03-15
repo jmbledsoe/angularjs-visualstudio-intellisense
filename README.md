@@ -1,4 +1,4 @@
-IntelliSense for AngularJS Components in Visual Studio
+JavaScript IntelliSense for AngularJS Components in Visual Studio
 ===================================
 
 This project provides intellisense in JavaScript files for injected AngularJS components in Visual Studio.
