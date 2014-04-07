@@ -237,7 +237,7 @@
 
         if (initializeFunction) {
             // Call the initialize function with dependency objects (limit to 20 for now).
-            initializeFunction(
+            var initializedComponent = initializeFunction(
                 dependencies[0],
                 dependencies[1],
                 dependencies[2],
@@ -258,6 +258,11 @@
                 dependencies[17],
                 dependencies[18],
                 dependencies[19]);
+
+            // If the result is a provider (i.e. has a $get initializer) then call that as well.
+            if (initializedComponent.$get) {
+                initialize(injector, initializedComponent.$get);
+            }
         }
     }
     function componentMatchesProviderFunction(component, providerFunction) {
