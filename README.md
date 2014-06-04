@@ -12,7 +12,7 @@ Enabling intellisense for your custom AngularJS components is simple and can be 
 ### Enabling Intellisense in a Single Project
 
 1. Add the [_intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/_intellisense.js) file to the Scripts directory of your web project containing AngularJS components.
-2. Ensure that a link to the _intellisense.js file is included in the _references.js file of your project, along with links to the AngularJS JavaScript files and the JavaScript files containing your custom components.
+2. Ensure that a link to the _intellisense.js file is included in the _references.js file of your project, along with links to the AngularJS JavaScript files and the JavaScript files containing your custom components. The link to _intellisense.js should be the last one in the _references.js file, to ensure that all custom components are picked up by the the Intellisense engine.
 
 That's it! All of your AngularJS components should now be fully available via intellisense.
 
