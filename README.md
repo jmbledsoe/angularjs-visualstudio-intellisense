@@ -20,6 +20,11 @@ That's it! All of your AngularJS components should now be fully available via in
 
 If you prefer to enable AngularJS intellisene for all of your web projects, simply save the [_intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/_intellisense.js) file and add a reference to it under "Tools > Options > Text Editor > JavaScript > IntelliSense".
 
+## Tips & Tricks
+
+1. In order for the intellisense extension to find your AngularJS modules, they either need to be assigned to local variables in the file for which you want intellisense, or else they need to be accessible as properties of the window object.
+2. Intellisense doesn't yet work for private JavaScript functions inside AngularJS components, but this feature will be added in a future version.
+
 ## Project Status
 
 This project is still early in its life and so may still have issues, but it is stable enough for use as-is. It provides intellisense for AngularJS components in most of the cases I have tested, although there are some code structures that it cannot figure out yet. If you encounter any issues or any scenarios in which the project isn't providing proper intellisense, please submit an issue.
