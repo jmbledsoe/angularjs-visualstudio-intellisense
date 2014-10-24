@@ -59,9 +59,6 @@
   <ItemGroup>
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\angular-references.js" />
-    <Content Include="Scripts\common.js" />
-    <Content Include="Scripts\logger.js" />
-    <Content Include="Scripts\two-services-one-module.js" />
     <Content Include="Scripts\_intellisense-tests.js" />
     <Content Include="Scripts\_intellisense.js" />
   </ItemGroup>
