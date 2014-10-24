@@ -228,8 +228,8 @@
 
     //#region Module Tracking
 
-    // Keep track of module names.
-    var moduleNames = [];
+    // Keep track of module names, with each module name mapped to an array of all its required modules.
+    var requiredModuleMap = {};
     var moduleProviderFunctions = ['provider', 'factory', 'service', 'animation', 'filter', 'controller', 'directive', 'config', 'run'];
 
     // Keep track of the provider injector in order to inject into providers.
@@ -376,14 +376,20 @@
             moduleName = module.name;
         }
 
-        if (moduleNames.indexOf(moduleName) == -1) {
+        if (requiredModuleMap[moduleName] === undefined) {
             // Recursively process dependent modules.
             forEach(module.requires, trackModule);
 
             logMessage(LOG_LEVEL.INFO, 'Tracking module "' + moduleName + '".');
 
-            // Store that the module has been processed to prevent duplicate processing.
-            moduleNames.push(moduleName);
+            // Store the module name mapped to the names of all required modules.
+            var requiredModuleNames = [moduleName];
+
+            forEach(module.requires, function (requiredModuleName) {
+                requiredModuleNames.splice(requiredModuleNames.length, 0, requiredModuleMap[requiredModuleName]);
+            });
+
+            requiredModuleMap[moduleName] = requiredModuleNames;
 
             // Decorate module provider functions.
             decorateModuleProviderFunctions(module);
@@ -407,7 +413,7 @@
 
                     // Create an injector for the module.
                     // (This will execute all configuration and run blocks.)
-                    var injector = angular.injector(moduleNames);
+                    var injector = angular.injector(requiredModuleMap[module.name]);
 
                     if (arguments.length === 2) {
                         var component;
@@ -627,7 +633,7 @@
                             trackModule(argument);
 
                             // (Re)create an injector for the module.
-                            jasmineInjector = angular.injector(moduleNames);
+                            jasmineInjector = angular.injector(requiredModuleMap[argument]);
                         } else if (angular.isFunction(argument) || angular.isArray(argument)) {
                             // Invoke the module configuration function.
                             providerInjector.invoke(argument);
