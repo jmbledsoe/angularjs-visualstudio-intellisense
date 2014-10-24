@@ -1,57 +1,72 @@
-﻿(function (angular) {
+﻿AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
+
+(function (angular) {
     // Create a test module.
     var testApp = angular.module('tests', ['ng', 'ngAnimate', 'ngRoute'], ['$logProvider', function (logProvider) {
         // Test: Providers can be injected into module config functions in module declaration.
-        // logProvider.
-    }]).config(['$locationProvider', function ($locationProvider) {
-        $locationProvider.html5Mode = true;
-    }]).factory('chainedFactory', function ($location) {
-        // Test: Components can be injected into chained provider functions.
-        // Test: Components can be injected by function parameter name.
-        // $location.
-    });
-
-    testApp.constant('testConstant', { foo: 1, bar: 2 });
+        //logProvider.
+    }]);
 
     // Create a test provider.
-    testApp.provider('testComponent', ['$logProvider', 'testConstant', function (logProvider, constant) {
+    testApp.provider('testComponent', ['$logProvider', function (logProvider) {
         // Test: Providers can be injected into other provider functions.
-        // logProvider.
-
-        // Test: Constants can be injected into provider functions.
-        // constant.
+        //logProvider.
 
         this.someProviderField = 42;
         this.someProviderFunction = function () {
-
+            // Test: Providers injected into provider functions can be referenced in closures.
+            //logProvider.
         };
 
         this.$get = ['$q', function ($q) {
-            // Test: Components can be injected into inline functions.
-            // $q.
+            // Test: Components can be injected into provider $get functions.
+            //$q.
 
             return {
                 someField: 21,
-                someFunction: function () {
+                someFunction: function ($scope) {
+                    // Test: Components injected into provider $get functions can be referenced in closures.
+                    //$q.
+                    //$scope.
                 }
             };
         }];
     }]);
 
     // Create another test provider
-    testApp.provider('testAnotherComponent', ['testComponentProvider', function(componentProvider) {
+    testApp.provider('testAnotherComponent', ['testComponentProvider', function (componentProvider) {
         // Test: Providers can be injected into other providers.
-        // componentProvider.
+        //componentProvider.
     }]);
 
     // Create a test factory.
     testApp.factory('testFactory', ['$q', 'testComponent', function ($q, component) {
         // Test: Components can be injected into factory functions.
-        // $q.
-        // component.
+        //$q.
+        //component.
         return {
             someFactoryField: 21,
-            someFactoryFunction: function() {
+            someFactoryFunction: function () {
+                // Test: Components injected into factory functions can be referenced in closures.
+                //$q.
+                //component.
+
+                var foo = function (param) {
+                    // Test: Components injected into factory functions can be referenced in multiple levels of closures.
+                    //$q.
+                    //component.
+                    //param.
+                }
+
+                return function () {
+                    foo(component);
+
+                    // Test: Components injected into factory functions can be referenced in multiple levels of closures.
+                    //$q.
+                    //component.
+
+
+                };
             }
         };
     }]);
@@ -59,30 +74,32 @@
     // Create a test service.
     testApp.service('testService', ['$q', 'testFactory', function ($q, factory) {
         // Test: Components can be injected into factory functions.
-        // $q.
-        // factory.
+        //$q.
+        //factory.
+    }]);
 
-        this.someServiceField = 42;
-        this.someServiceFunction = function() {
+    // Create a test config block.
+    testApp.config(['testComponentProvider', function (componentProvider) {
+        // Test: Providers can be injected into config blocks.
+        //componentProvider.
+    }]);
 
+    // Create a test run block.
+    testApp.run(['testFactory', function (component) {
+        // Test: Components can be injected into run blocks.
+        //component.
+    }]);
+
+    // Create a test animate block.
+    testApp.animation('testAnimation', function (testFactory) {
+        // Test: Components can be injected into animation factory functions.
+        //component.
+
+        return {
+            enter: function (element, callback) {
+                // Test: Components can be injected into animation functions.
+                //component.
+            }
         };
-    }]);
-
-    // Create a test controller.
-    testApp.controller('testController', ['$q', 'testFactory', 'testService', function ($q, factory, service) {
-        // Test: Components can be injected into controllers.
-        // $q.
-        // factory.
-        // service.
-    }]);
-
-    // Create a test module config function.
-    testApp.config(['testConstant', 'testComponentProvider', function (constant, provider) {
-        // Test: Constants can be injected into config functions.
-        // constant.
-
-        // Test: Providers can be injected into config functions.
-        // provider.
-    }]);
-    
+    });
 })(angular);
