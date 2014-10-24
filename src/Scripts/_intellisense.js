@@ -345,19 +345,28 @@
     // Decorate the angular.module function to record the name of each module as it is registered.
     var originalModuleFunction = angular.module;
 
-    angular.module = function () {
+    angular.module = function (name, requires, configFn) {
         logMessage(LOG_LEVEL.VERBOSE, 'Calling "angular.module" with the following arguments:');
         logValue(LOG_LEVEL.VERBOSE, arguments);
 
-        // Call the original module function.
-        var returnValue = originalModuleFunction.apply(angular, arguments);
+        // If the module has not yet been tracked, then call the original module function with all of the specified arguments.
+        // Otherwise, call the original module function with only the module name.
+        // (This prevents the module from being recreated if the module is being declared in this file but is referred to in other files.)
+        var returnValue = requiredModuleMap[name] === undefined ?
+            originalModuleFunction.apply(angular, arguments) :
+            originalModuleFunction.call(angular, name);
+
+        // If the second argument (requires) is specified, then clear the required module map to redefine the modules this module requires.
+        if (requires) {
+            requiredModuleMap[name] = undefined;
+        }
 
         // Ensure that the module and its dependencies are tracked, and all of its provider functions run.
-        trackModule(arguments[0]);
+        trackModule(returnValue);
 
         // Call the configuration function if one is specified.
-        if (arguments[2]) {
-            returnValue.config(arguments[2]);
+        if (configFn) {
+            returnValue.config(configFn);
         }
 
         return returnValue;
@@ -369,7 +378,7 @@
         if (angular.isString(moduleOrName)) {
             // If the argument is a module name, retrieve the module from the angular.module function.
             moduleName = moduleOrName;
-            module = originalModuleFunction(moduleName);
+            module = originalModuleFunction.call(angular, moduleName);
         } else {
             // Otherwise the argument is a module, so get the name from its name property.
             module = moduleOrName;
