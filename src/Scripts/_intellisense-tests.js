@@ -1,4 +1,4 @@
-﻿AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
+﻿_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
 
 (function (angular) {
     // Create a test module.
