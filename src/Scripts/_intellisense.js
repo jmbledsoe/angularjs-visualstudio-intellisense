@@ -17,8 +17,8 @@
     // Set the current log level to one of the log levels above in order to view log messages.
     var CURRENT_LOG_LEVEL = LOG_LEVEL.OFF;
 
-    // Expose a way to set the log level from any file.
-    window.AngularJS_VisualStudio_Intellisense = {
+    // Expose a hidden object that may be used to set the log level from any file.
+    window._$AngularJS_VisualStudio_Intellisense = {
         setLogLevelVerbose: function () { CURRENT_LOG_LEVEL = LOG_LEVEL.VERBOSE; },
         setLogLevelInfo: function () { CURRENT_LOG_LEVEL = LOG_LEVEL.INFO; },
         setLogLevelWarn: function () { CURRENT_LOG_LEVEL = LOG_LEVEL.WARN; },
@@ -321,6 +321,8 @@
         return obj;
     };
 
+    intellisense.redirectDefinition(angular.forEach, originalForEach);
+
     // Search the window object for globally-defined angular modules, and track them if they are found.
     if (window) {
         forEach(window, function (obj) {
@@ -371,6 +373,7 @@
 
         return returnValue;
     };
+    intellisense.redirectDefinition(angular.module, originalModuleFunction);
 
     function trackModule(moduleOrName) {
         var moduleName, module;
