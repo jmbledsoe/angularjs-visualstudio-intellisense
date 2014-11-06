@@ -1,5 +1,4 @@
 ﻿_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
-
 (function (angular) {
     // Create a test module.
     var testApp = angular.module('tests', ['ng', 'ngAnimate', 'ngRoute'], ['$logProvider', function (logProvider) {
@@ -76,6 +75,7 @@
         // Test: Components can be injected into factory functions.
         //$q.
         //factory.
+        return {foo: true};
     }]);
 
     // Create a test config block.
@@ -102,4 +102,15 @@
             }
         };
     });
-})(angular);
+} )( angular );
+
+(function ( angular ) {
+    // Tests modules not bound to variables/global
+    angular.module( "isolatedTestApp", ['ngRoute', 'tests'] )
+
+    angular.module( 'isolatedTestApp' ).config( ['$routeProvider', function (routeProvider) {
+        // Test: Providers can be injected into config blocks, in modules that are not
+        // bound to a variable or globally exposed
+        //routeProvider.
+    }] );
+} )( angular );
