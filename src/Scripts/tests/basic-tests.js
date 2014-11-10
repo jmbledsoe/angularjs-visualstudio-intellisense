@@ -1,4 +1,4 @@
-﻿//_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
+﻿_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
 (function (angular) {
     // Create a test module.
     var testApp = angular.module('tests', ['ng', 'ngAnimate', 'ngRoute'], ['$logProvider', function (logProvider) {
@@ -6,7 +6,7 @@
         //logProvider.
     }]).config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode = true;
-    }]).factory('chainedFactory', function ($location) {
+    }]).`factory('chainedFactory', function ($location) {
         // Test: Components can be injected into chained provider functions.
         // Test: Components can be injected by function parameter name.
         //$location.
@@ -88,6 +88,11 @@
         return {foo: true};
     }]);
 
+    testApp.controller('testController', function ($scope){
+        // Test: $scope can be injected into controller functions.
+        // $scope.
+    });
+
     // Create a test config block.
     testApp.config(['testComponentProvider', function (componentProvider) {
         // Test: Providers can be injected into config blocks.
@@ -103,12 +108,12 @@
     // Create a test animate block.
     testApp.animation('testAnimation', function (testFactory) {
         // Test: Components can be injected into animation factory functions.
-        //component.
+        //testFactory.
 
         return {
             enter: function (element, callback) {
                 // Test: Components can be injected into animation functions.
-                //component.
+                // testFactory
             }
         };
     });
