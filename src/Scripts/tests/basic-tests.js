@@ -6,7 +6,7 @@
         //logProvider.
     }]).config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode = true;
-    }]).`factory('chainedFactory', function ($location) {
+    }]).factory('chainedFactory', function ($location) {
         // Test: Components can be injected into chained provider functions.
         // Test: Components can be injected by function parameter name.
         //$location.
