@@ -59,7 +59,9 @@
   <ItemGroup>
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\angular-references.js" />
-    <Content Include="Scripts\_intellisense-tests.js" />
+    <Content Include="Scripts\tests\basic-tests.js" />
+    <Content Include="Scripts\tests\multi-file-test2.js" />
+    <Content Include="Scripts\tests\multi-file-test1.js" />
     <Content Include="Scripts\_intellisense.js" />
   </ItemGroup>
   <ItemGroup>

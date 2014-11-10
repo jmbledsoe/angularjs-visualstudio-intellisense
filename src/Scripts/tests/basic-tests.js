@@ -1,13 +1,23 @@
-﻿_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
+﻿//_$AngularJS_VisualStudio_Intellisense.setLogLevelVerbose();
 (function (angular) {
     // Create a test module.
     var testApp = angular.module('tests', ['ng', 'ngAnimate', 'ngRoute'], ['$logProvider', function (logProvider) {
         // Test: Providers can be injected into module config functions in module declaration.
         //logProvider.
-    }]);
+    }]).config(['$locationProvider', function ($locationProvider) {
+        $locationProvider.html5Mode = true;
+    }]).factory('chainedFactory', function ($location) {
+        // Test: Components can be injected into chained provider functions.
+        // Test: Components can be injected by function parameter name.
+        //$location.
+    });
+
+    testApp.constant('testConstant', { foo: 1, bar: 2 });
 
     // Create a test provider.
-    testApp.provider('testComponent', ['$logProvider', function (logProvider) {
+    testApp.provider('testComponent', ['$logProvider', 'testConstant', function (logProvider, testConstant) {
+        // Test: Constants can be injected into other provider functions
+        //testConstant.
         // Test: Providers can be injected into other provider functions.
         //logProvider.
 

@@ -321,15 +321,6 @@
 
     intellisense.redirectDefinition( angular.forEach, originalForEach );
 
-    // Search the window object for globally-defined angular modules, and track them if they are found.
-    if ( window ) {
-        forEach( window, function ( obj ) {
-            if ( isAngularModule( obj ) ) {
-                //trackModule( obj );
-            }
-        } );
-    }
-
     function isAngularModule( obj ) {
         // Angular modules all have names and invoke queues and core provider functions.
         return angular.isObject( obj ) &&
@@ -570,6 +561,10 @@
                         // Digest the root scope to force promise resolution.
                         injector.get( '$rootScope' ).$digest();
 
+                        return returnValue;
+                    } else {
+                        // In all other cases, force the provider function to behave the same as normal
+                        // This was required for .config() functions to work correctly.
                         return returnValue;
                     }
                 };
