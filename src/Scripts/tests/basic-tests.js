@@ -85,10 +85,10 @@
         // Test: Components can be injected into factory functions.
         //$q.
         //factory.
-        return {foo: true};
+        return { foo: true };
     }]);
 
-    testApp.controller('testController', function ($scope){
+    testApp.controller('testController', function ($scope) {
         // Test: $scope can be injected into controller functions.
         // $scope.
     });
@@ -113,19 +113,45 @@
         return {
             enter: function (element, callback) {
                 // Test: Components can be injected into animation functions.
-                // testFactory
+                // testFactory.
             }
         };
     });
-} )( angular );
+})(angular);
 
-(function ( angular ) {
+(function (angular) {
     // Tests modules not bound to variables/global
-    angular.module( "isolatedTestApp", ['ngRoute', 'tests'] )
+    angular.module("isolatedTestApp", ['ngRoute', 'tests'])
 
-    angular.module( 'isolatedTestApp' ).config( ['$routeProvider', function (routeProvider) {
+    angular.module('isolatedTestApp').config(['$routeProvider', function (routeProvider) {
         // Test: Providers can be injected into config blocks, in modules that are not
         // bound to a variable or globally exposed
         //routeProvider.
-    }] );
-} )( angular );
+    }]);
+})(angular);
+
+(function (angular) {
+    angular.module("implicitNgModTest", [])
+    .controller('MyController', function ($location) {
+        // Test: the 'ng' module should be implicitly included by default and core services "just work"
+        //$location.
+    });
+})(angular);
+
+(function (angular) {
+    angular.module('sameServiceModule1', [])
+    .service("service", function () {
+        return { valueFromModule1: true };
+    });
+
+    angular.module('sameServiceModule2', [])
+    .service("service", function () {
+        return { valueFromModule2: true };
+    });
+
+    angular.module("sameServiceIn2ModsTest", ['sameServiceModule1'])
+    .controller('MyController', function (service) {
+        // Test: the service from "module1" should be shown, not the service of the same name from "module2"
+        //service.
+    });
+})(angular);
