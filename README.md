@@ -29,6 +29,17 @@ This project is still early in its life and so may still have issues, but it is 
 
 I hope to create a NuGet package to automate the installation of the intellisense file, so expect that soon.
 
+**Update: 11/10/2014**
+
+Refactored the extension so that it works with the Visual Studio JavaScript editor's native extensibility model - renaming the extension to angular.intellisense.js. Now, if the file is placed next to angular.js in the project, it will automatically be loaded right after Angular library.
+
+Other bug fixes made:
+
+1. Modules no longer need to be exported to global
+2. The implicit "ng" module is now required by default for all modules - the same as Angular's runtime behavior
+3. Required modules are respected correctly when editing the first file in which a module is defined
+4. Expanded test cases
+
 **Update: 10/23/2014**
 
 I've made some significant changes to the _intellisense.js file, which should enable intellisense in far more parts of code. Specifically, I've added code to enable intellisense for:
