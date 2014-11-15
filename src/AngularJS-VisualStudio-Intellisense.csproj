@@ -63,8 +63,8 @@
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\tests\basic-tests.js" />
-    <Content Include="Scripts\tests\multi-file-test2.js" />
-    <Content Include="Scripts\tests\multi-file-test1.js" />
+    <Content Include="Scripts\tests\multi-file-test\multi-file-test2.js" />
+    <Content Include="Scripts\tests\multi-file-test\multi-file-test1.js" />
     <Content Include="Scripts\angular.intellisense.js" />
   </ItemGroup>
   <ItemGroup>
