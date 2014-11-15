@@ -350,10 +350,9 @@
 
         // When editing a file that initially creates a module (e.g. via angular.module('name', ['dependency']))
         // it's likely that the JS editor has already executed code that uses that module and did not define dependencies
-        // (e.g. via angular.module('name')). This line of code makes sure that the dependencies are maintained
+        // (e.g. via angular.module('name')). This line of code makes sure that the dependencies are maintained.
         if (!returnValue.requires && requires) {
             returnValue.requires = requires;
-            requiredModuleMap[name] = undefined;
         }
 
         // HACK: For some reason, the implicit require of the 'ng' module gets dropped in the call to the originalModuleFunction
