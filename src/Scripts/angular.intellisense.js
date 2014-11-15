@@ -419,7 +419,7 @@
             if (originalProviderFunction) {
                 module[providerFunction] = function () {
                     logMessage(LOG_LEVEL.VERBOSE, 'Calling provider function "' + providerFunction + '" with the following arguments:');
-                    logValue(LOG_LEVEL.VERBOSE, arguments.length + '');
+                    logValue(LOG_LEVEL.VERBOSE, arguments);
 
                     // Call the original component type function.
                     var returnValue = originalProviderFunction.apply(module, arguments);
