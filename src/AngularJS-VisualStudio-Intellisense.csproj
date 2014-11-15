@@ -57,10 +57,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="Scripts\_references.js" />
-    <Content Include="Scripts\angular-references.js" />
-    <Content Include="Scripts\_intellisense-tests.js" />
-    <Content Include="Scripts\_intellisense.js" />
+    <Content Include="Scripts\angular-animate.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\tests\basic-tests.js" />
+    <Content Include="Scripts\tests\multi-file-test2.js" />
+    <Content Include="Scripts\tests\multi-file-test1.js" />
+    <Content Include="Scripts\angular.intellisense.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -94,7 +99,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <!-- Make sure that Angular JS files are included in the scripts folder, copying from the Angular NuGet packages that may have just been installed -->
+    <Copy SourceFiles="packages\AngularJS.Core.1.2.26\content\scripts\angular.js" DestinationFiles="Scripts\angular.js" OverwriteReadOnlyFiles="false" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="packages\AngularJS.Animate.1.2.26\content\scripts\angular-animate.js" DestinationFiles="Scripts\angular-animate.js" OverwriteReadOnlyFiles="false" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="packages\AngularJS.Route.1.2.26\content\scripts\angular-route.js" DestinationFiles="Scripts\angular-route.js" OverwriteReadOnlyFiles="false" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

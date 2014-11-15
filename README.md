@@ -11,25 +11,34 @@ Enabling intellisense for your custom AngularJS components is simple and can be 
 
 ### Enabling Intellisense in a Single Project
 
-1. Add the [_intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/_intellisense.js) file to the Scripts directory of your web project containing AngularJS components.
-2. Ensure that a link to the _intellisense.js file is included in the _references.js file of your project, along with links to the AngularJS JavaScript files and the JavaScript files containing your custom components. The link to _intellisense.js should be the last one in the _references.js file, to ensure that all custom components are picked up by the the Intellisense engine.
+1. Add the [angular.intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/angular.intellisense.js) file to the same folder in your project that contains angular.js or angular.min.js.
 
 That's it! All of your AngularJS components should now be fully available via intellisense.
 
 ### Enabling Intellisense in Multiple Projects
 
-If you prefer to enable AngularJS intellisene for all of your web projects, simply save the [_intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/_intellisense.js) file and add a reference to it under "Tools > Options > Text Editor > JavaScript > IntelliSense".
+If you prefer to enable AngularJS intellisene for all of your web projects, simply save the [angular.intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/angular.intellisense.js) file to your %PROGRAMFILES%\Microsoft Visual Studio 12.0\JavaScript\References folder. %PROGRAMFILES% is the location of your program files folder, usually under C:\Program Files or C:\Program Files (x86).
 
 ## Tips & Tricks
 
-1. In order for the intellisense extension to find your AngularJS modules, they either need to be assigned to local variables in the file for which you want intellisense, or else they need to be accessible as properties of the window object.
-2. Intellisense doesn't yet work for private JavaScript functions inside AngularJS components, but this feature will be added in a future version. **Update:** The latest revision of the _intellisense.js file added support for some private functions along some code paths. Basically, the Visual Studio JavaScript intellisense engine works by calling the JavaScript methods in a code file. The latest update calls many more methods, but still misses methods that are only called in "non-default" code paths. I'm hoping that I can gain some insight into this engine and fix this issue.
+1. Intellisense doesn't yet work for private JavaScript functions inside AngularJS components, but this feature will be added in a future version. **Update:** The latest revision of the _intellisense.js file added support for some private functions along some code paths. Basically, the Visual Studio JavaScript intellisense engine works by calling the JavaScript methods in a code file. The latest update calls many more methods, but still misses methods that are only called in "non-default" code paths. I'm hoping that I can gain some insight into this engine and fix this issue.
 
 ## Project Status
 
 This project is still early in its life and so may still have issues, but it is stable enough for use as-is. It provides intellisense for AngularJS components in most of the cases I have tested, although there are some code structures that it cannot figure out yet. If you encounter any issues or any scenarios in which the project isn't providing proper intellisense, please submit an issue.
 
 I hope to create a NuGet package to automate the installation of the intellisense file, so expect that soon.
+
+**Update: 11/10/2014**
+
+Refactored the extension so that it works with the Visual Studio JavaScript editor's native extensibility model - renaming the extension to angular.intellisense.js. Now, if the file is placed next to angular.js in the project, it will automatically be loaded right after Angular library.
+
+Other bug fixes made:
+
+1. Modules no longer need to be exported to global
+2. The implicit "ng" module is now required by default for all modules - the same as Angular's runtime behavior
+3. Required modules are respected correctly when editing the first file in which a module is defined
+4. Expanded test cases
 
 **Update: 10/23/2014**
 

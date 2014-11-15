@@ -1,5 +1,4 @@
 ﻿(function (intellisense) {
-
     // If AngularJS is undefined, then bypass AngularJS Intellisense.
     if (!angular) {
         return;
@@ -74,10 +73,8 @@
         } else if (isScope(value)) {
             value = '$SCOPE';
         }
-
         if (angular.isArray(value)) {
             intellisense.logMessage(pad + (key ? key + ': ' : '') + ' [');
-
             forEach(value, function (item) {
                 logValue(logLevel, item, '', level + 1);
             });
@@ -323,15 +320,6 @@
 
     intellisense.redirectDefinition(angular.forEach, originalForEach);
 
-    // Search the window object for globally-defined angular modules, and track them if they are found.
-    if (window) {
-        forEach(window, function (obj) {
-            if (isAngularModule(obj)) {
-                trackModule(obj);
-            }
-        });
-    }
-
     function isAngularModule(obj) {
         // Angular modules all have names and invoke queues and core provider functions.
         return angular.isObject(obj) &&
@@ -348,19 +336,30 @@
     var originalModuleFunction = angular.module;
 
     angular.module = function (name, requires, configFn) {
+        var hasModuleBeenTracked = requiredModuleMap[name] !== undefined;
+
         logMessage(LOG_LEVEL.VERBOSE, 'Calling "angular.module" with the following arguments:');
         logValue(LOG_LEVEL.VERBOSE, arguments);
 
         // If the module has not yet been tracked, then call the original module function with all of the specified arguments.
         // Otherwise, call the original module function with only the module name.
         // (This prevents the module from being recreated if the module is being declared in this file but is referred to in other files.)
-        var returnValue = requiredModuleMap[name] === undefined ?
-            originalModuleFunction.apply(angular, arguments) :
-            originalModuleFunction.call(angular, name);
+        var returnValue = hasModuleBeenTracked ?
+            originalModuleFunction.call(angular, name) :
+            originalModuleFunction.apply(angular, arguments);
 
-        // If the second argument (requires) is specified, then clear the required module map to redefine the modules this module requires.
-        if (requires) {
+        // When editing a file that initially creates a module (e.g. via angular.module('name', ['dependency']))
+        // it's likely that the JS editor has already executed code that uses that module and did not define dependencies
+        // (e.g. via angular.module('name')). This line of code makes sure that the dependencies are maintained
+        if (!returnValue.requires && requires) {
+            returnValue.requires = requires;
             requiredModuleMap[name] = undefined;
+        }
+
+        // HACK: For some reason, the implicit require of the 'ng' module gets dropped in the call to the originalModuleFunction
+        // this re-adds it if it wasn't explicit
+        if (angular.isArray(returnValue.requires) && requires.indexOf('ng') == -1) {
+            returnValue.requires = requires.concat('ng');
         }
 
         // Ensure that the module and its dependencies are tracked, and all of its provider functions run.
@@ -406,7 +405,9 @@
             // Decorate module provider functions.
             decorateModuleProviderFunctions(module);
         }
+
     }
+
     function decorateModuleProviderFunctions(module) {
         // Initialize each component with empty object dependencies. 
         forEach(moduleProviderFunctions, function (providerFunction) {
@@ -418,7 +419,7 @@
             if (originalProviderFunction) {
                 module[providerFunction] = function () {
                     logMessage(LOG_LEVEL.VERBOSE, 'Calling provider function "' + providerFunction + '" with the following arguments:');
-                    logValue(LOG_LEVEL.VERBOSE, arguments);
+                    logValue(LOG_LEVEL.VERBOSE, arguments.length + '');
 
                     // Call the original component type function.
                     var returnValue = originalProviderFunction.apply(module, arguments);
@@ -569,6 +570,10 @@
                         injector.get('$rootScope').$digest();
 
                         return returnValue;
+                    } else {
+                        // In all other cases, force the provider function to behave the same as normal
+                        // This was required for .config() functions to work correctly.
+                        return returnValue;
                     }
                 };
             }
@@ -684,3 +689,4 @@
         });
     }
 })(window.intellisense);
+
