@@ -376,6 +376,10 @@
     function trackModule(moduleOrName) {
         var moduleName, module;
 
+        // Tell the JavaScript editor that progress is being made in building the
+        // IntelliSense simulation, giving us more time to process modules before timing out
+        intellisense.progress();
+
         if (angular.isString(moduleOrName)) {
             // If the argument is a module name, retrieve the module from the angular.module function.
             moduleName = moduleOrName;
@@ -578,10 +582,20 @@
             }
         });
     }
-    function callComponentFunctions(injector, component, locals) {
+    function callComponentFunctions(injector, component, locals, recursionDepth) {
+        // A recursion guard, to prevent this code from recursing too long and
+        // causing the IntelliSense engine to timeout
+        if (!recursionDepth) { recursionDepth = 0; }
+        if (recursionDepth++ >= 2) { return; }
+
+        // Tell the JavaScript editor that progress is being made in building the
+        // IntelliSense simulation, giving us more time to call component functions before timing out
+        intellisense.progress();
+
         if (component) {
-            if (angular.isElement(component)) {
-                // Bypass calling component functions on elements.
+            if (angular.isElement(component) || angular.isString(component) || angular.isNumber(component) || angular.isDate(component)) {
+                // Bypass calling component functions when there likely aren't any user-defined
+                // functions to call
                 return;
             } else if (angular.isArray(component) || angular.isFunction(component)) {
                 // If the component itself is a function, then call it.
@@ -591,7 +605,7 @@
                 logValue(LOG_LEVEL.VERBOSE, returnValue);
 
                 // Recursively call functions on the return value.
-                callComponentFunctions(injector, returnValue, locals);
+                callComponentFunctions(injector, returnValue, locals, recursionDepth);
             } else {
                 logMessage(LOG_LEVEL.VERBOSE, 'Calling all functions on the following component:');
                 logValue(LOG_LEVEL.VERBOSE, component);
@@ -605,7 +619,7 @@
                         logValue(LOG_LEVEL.VERBOSE, returnValue);
 
                         // Recursively call functions on the return value.
-                        callComponentFunctions(injector, returnValue, locals);
+                        callComponentFunctions(injector, returnValue, locals, recursionDepth);
                     }
                 });
             }

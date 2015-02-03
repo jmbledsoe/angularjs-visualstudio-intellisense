@@ -2,13 +2,13 @@
 (function (angular) {
     // Create a test module.
     var testApp = angular.module('tests', ['ng', 'ngAnimate', 'ngRoute'], ['$logProvider', function (logProvider) {
-        // Test: Providers can be injected into module config functions in module declaration.
+        // TEST: Providers can be injected into module config functions in module declaration.
         //logProvider.
     }]).config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode = true;
     }]).factory('chainedFactory', function ($location) {
-        // Test: Components can be injected into chained provider functions.
-        // Test: Components can be injected by function parameter name.
+        // TEST: Components can be injected into chained provider functions.
+        // TEST: Components can be injected by function parameter name.
         //$location.
     });
 
@@ -16,27 +16,26 @@
 
     // Create a test provider.
     testApp.provider('testComponent', ['$logProvider', 'testConstant', function (logProvider, testConstant) {
-        // Test: Constants can be injected into other provider functions
+        // TEST: Constants can be injected into other provider functions
         //testConstant.
-        // Test: Providers can be injected into other provider functions.
+        // TEST: Providers can be injected into other provider functions.
         //logProvider.
 
         this.someProviderField = 42;
         this.someProviderFunction = function () {
-            // Test: Providers injected into provider functions can be referenced in closures.
+            // TEST: Providers injected into provider functions can be referenced in closures.
             //logProvider.
         };
 
         this.$get = ['$q', function ($q) {
-            // Test: Components can be injected into provider $get functions.
+            // TEST: Components can be injected into provider $get functions.
             //$q.
 
             return {
                 someField: 21,
-                someFunction: function ($scope) {
-                    // Test: Components injected into provider $get functions can be referenced in closures.
+                someFunction: function ( $scope ) {
+                    // TEST: Components injected into provider $get functions can be referenced in closures.
                     //$q.
-                    //$scope.
                 }
             };
         }];
@@ -44,24 +43,24 @@
 
     // Create another test provider
     testApp.provider('testAnotherComponent', ['testComponentProvider', function (componentProvider) {
-        // Test: Providers can be injected into other providers.
+        // TEST: Providers can be injected into other providers.
         //componentProvider.
     }]);
 
     // Create a test factory.
     testApp.factory('testFactory', ['$q', 'testComponent', function ($q, component) {
-        // Test: Components can be injected into factory functions.
+        // TEST: Components can be injected into factory functions.
         //$q.
         //component.
         return {
             someFactoryField: 21,
             someFactoryFunction: function () {
-                // Test: Components injected into factory functions can be referenced in closures.
+                // TEST: Components injected into factory functions can be referenced in closures.
                 //$q.
                 //component.
 
                 var foo = function (param) {
-                    // Test: Components injected into factory functions can be referenced in multiple levels of closures.
+                    // TEST: Components injected into factory functions can be referenced in multiple levels of closures.
                     //$q.
                     //component.
                     //param.
@@ -70,7 +69,7 @@
                 return function () {
                     foo(component);
 
-                    // Test: Components injected into factory functions can be referenced in multiple levels of closures.
+                    // TEST: Components injected into factory functions can be referenced in multiple levels of closures.
                     //$q.
                     //component.
 
@@ -82,37 +81,37 @@
 
     // Create a test service.
     testApp.service('testService', ['$q', 'testFactory', function ($q, factory) {
-        // Test: Components can be injected into factory functions.
+        // TEST: Components can be injected into factory functions.
         //$q.
         //factory.
         return { foo: true };
     }]);
 
     testApp.controller('testController', function ($scope) {
-        // Test: $scope can be injected into controller functions.
-        // $scope.
+        // TEST: $scope can be injected into controller functions.
+        //$scope.
     });
 
     // Create a test config block.
     testApp.config(['testComponentProvider', function (componentProvider) {
-        // Test: Providers can be injected into config blocks.
+        // TEST: Providers can be injected into config blocks.
         //componentProvider.
     }]);
 
     // Create a test run block.
     testApp.run(['testFactory', function (component) {
-        // Test: Components can be injected into run blocks.
+        // TEST: Components can be injected into run blocks.
         //component.
     }]);
 
     // Create a test animate block.
     testApp.animation('testAnimation', function (testFactory) {
-        // Test: Components can be injected into animation factory functions.
+        // TEST: Components can be injected into animation factory functions.
         //testFactory.
 
         return {
             enter: function (element, callback) {
-                // Test: Components can be injected into animation functions.
+                // TEST: Components can be injected into animation functions.
                 // testFactory.
             }
         };
@@ -124,7 +123,7 @@
     angular.module("isolatedTestApp", ['ngRoute', 'tests'])
 
     angular.module('isolatedTestApp').config(['$routeProvider', function (routeProvider) {
-        // Test: Providers can be injected into config blocks, in modules that are not
+        // TEST: Providers can be injected into config blocks, in modules that are not
         // bound to a variable or globally exposed
         //routeProvider.
     }]);
@@ -133,7 +132,7 @@
 (function (angular) {
     angular.module("implicitNgModTest", [])
     .controller('MyController', function ($location) {
-        // Test: the 'ng' module should be implicitly included by default and core services "just work"
+        // TEST: the 'ng' module should be implicitly included by default and core services "just work"
         //$location.
     });
 })(angular);
@@ -151,7 +150,7 @@
 
     angular.module("sameServiceIn2ModsTest", ['sameServiceModule1'])
     .controller('MyController', function (service) {
-        // Test: the service from "module1" should be shown, not the service of the same name from "module2"
+        // TEST: the service from "module1" should be shown, not the service of the same name from "module2"
         //service.
     });
 })(angular);

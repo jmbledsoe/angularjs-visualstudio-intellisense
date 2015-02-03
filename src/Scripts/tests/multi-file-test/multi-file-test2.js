@@ -6,6 +6,6 @@
 
     .controller('myController', function (service1) {
         // TEST: a completion list shows up below
-        service1.
+        //service1.
     });
 })();
