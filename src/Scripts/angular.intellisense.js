@@ -586,15 +586,16 @@
         // A recursion guard, to prevent this code from recursing too long and
         // causing the IntelliSense engine to timeout
         if (!recursionDepth) { recursionDepth = 0; }
-        if (recursionDepth++ >= 5) { return; }
+        if (recursionDepth++ >= 2) { return; }
 
         // Tell the JavaScript editor that progress is being made in building the
         // IntelliSense simulation, giving us more time to call component functions before timing out
         intellisense.progress();
 
         if (component) {
-            if (angular.isElement(component)) {
-                // Bypass calling component functions on elements.
+            if (angular.isElement(component) || angular.isString(component) || angular.isNumber(component) || angular.isDate(component)) {
+                // Bypass calling component functions when there likely aren't any user-defined
+                // functions to call
                 return;
             } else if (angular.isArray(component) || angular.isFunction(component)) {
                 // If the component itself is a function, then call it.
