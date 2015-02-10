@@ -408,10 +408,24 @@
             // Decorate module provider functions.
             decorateModuleProviderFunctions(module);
         }
-
     }
 
     function decorateModuleProviderFunctions(module) {
+        function addNavBarOverride(name, providerFn, callBackDefinition) {
+            if (!intellisense.declareNavigationContainer) { return; }
+
+            // When the callback defintion is an array, pull the actual callback off the end
+            if (angular.isArray(callBackDefinition)) {
+                callBackDefinition = callBackDefinition[callBackDefinition.length - 1];
+            }
+
+            // Add an entry to the nav bar for the current provider function
+            intellisense.declareNavigationContainer(
+                { callback: callBackDefinition },
+                name + ' (' + providerFn + ')',
+                'vs:GlyphGroupType')
+        }
+
         // Initialize each component with empty object dependencies. 
         forEach(moduleProviderFunctions, function (providerFunction) {
 
@@ -420,7 +434,7 @@
 
             // Only decorate the provider function if the module has it (which it may not for animate).
             if (originalProviderFunction) {
-                module[providerFunction] = function () {
+                module[providerFunction] = function (name, callBackDefinition) {
                     logMessage(LOG_LEVEL.VERBOSE, 'Calling provider function "' + providerFunction + '" with the following arguments:');
                     logValue(LOG_LEVEL.VERBOSE, arguments);
 
@@ -438,12 +452,14 @@
                         // Factories, services, providers, etc.
                         logMessage(LOG_LEVEL.INFO, 'Creating instance of ' + providerFunction + ' "' + arguments[0] + '".');
 
+                        addNavBarOverride(name, providerFunction, callBackDefinition);
+
                         // Initialize the component based on the provider function.
                         switch (providerFunction) {
                             case 'factory':
                             case 'service':
                                 component = injector.get(arguments[0]);
-
+                                
                                 break;
                             case 'provider':
                                 var component = arguments[1];
@@ -702,4 +718,3 @@
         });
     }
 })(window.intellisense);
-
