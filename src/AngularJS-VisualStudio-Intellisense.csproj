@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <None Include="Scripts\angular-route.intellisense.js" />
     <Content Include="Scripts\tests\test-ngModuleIncludedByDefault.js" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\angular-animate.js" />
