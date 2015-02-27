@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>AngularJS.Intellisense</id>
+        <version>1.0.2</version>
+        <title>AngularJS Intellilsense add on</title>
+        <authors>Shawn Cicoria, John Bledsoe</authors>
+        <owners>Shawn Cicoria, John Bledsoe</owners>
+        <licenseUrl>https://raw.githubusercontent.com/cicorias/angularjs-visualstudio-intellisense/master/LICENSE-ng</licenseUrl>
+        <projectUrl>https://angularjs.org/</projectUrl>
+        <iconUrl>https://secure.gravatar.com/avatar/6e1b5ab3ef1593413f1bee4e5a6e6ae7?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>This will inject the angularJs intellisense file to your project, along with adding a _references.js file that allows for auto-update of references to drive intellisense. 
+
+For the auto-update of _references.js you can disable by setting the flag to 'false'</description>
+        <summary>Provides project level support for AngularJS intellisence using an intellisense file from John Bledsoe (jmbledsoe) - https://github.com/jmbledsoe/angularjs-visualstudio-intellisense.</summary>
+        <releaseNotes>1.0.1 - minor fix - polluted _references.js file
+		1.0.0 - initial release
+		DISCLAIMER: This package is maintained by Shawn Cicoria, but is based upon the hard word of John Beldsoe who created the Intellisense support for AngularJS in Visual Studio. See his GitHub repository</releaseNotes>
+        <copyright>2015</copyright>
+        <tags>angularjs, javascript, intellisense</tags>
+        <dependencies>
+            <dependency id="AngularJS.Core" version="1.3.8" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="content\scripts\angular.intellisense.js" target="content\scripts\angular.intellisense.js" />
+        <file src="content\scripts\_references.js" target="content\scripts\_references.js" />
+    </files>
+</package>
