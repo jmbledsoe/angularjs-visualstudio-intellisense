@@ -154,3 +154,11 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+
+# Nuget Building stuff
+nuget/src/content/scripts/angular.intellisense.js
+nuget/nuget.exe
+nuget/AngularJS.Intellisense.1.0.0.nupkg
+nuget/src/content/scripts/angular.intellisense.js
+nuget/nuget.exe
