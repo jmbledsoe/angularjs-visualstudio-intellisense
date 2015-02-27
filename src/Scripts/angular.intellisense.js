@@ -236,6 +236,89 @@
         // Keep track of the the provider injector.
         providerInjector = $injector;
 
+        $provide.decorator("$http", ['$delegate', function ($delegate) {
+            /**
+            * @typedef {Object} httpConfig
+            * @property {String} method HTTP method (e.g. 'GET', 'POST', etc)
+            *    @property {String} url Absolute or relative URL of the resource that is being requested.
+            * @property {Object.<string|Object>} params  – Map of strings or objects which will be turned
+            *      to `?key1=value1&key2=value2` after the url. If the value is not a string, it will be
+            *      JSONified.
+            * @property {string|Object} data  – Data to be sent as the request message data.
+            * @property {Object} headers  – Map of strings or functions which return strings representing
+            *      HTTP headers to send to the server. If the return value of a function is null, the
+            *      header will not be sent.
+            * @property {string} xsrfHeaderName  – Name of HTTP header to populate with the XSRF token.
+            * @property {string} xsrfCookieName  – Name of cookie containing the XSRF token.
+            * @property {function(data, headersGetter)|Array.<function(data, headersGetter)>} transformRequest  –
+            *      transform function or an array of such functions. The transform function takes the http
+            *      request body and headers and returns its transformed (typically serialized) version.
+            * @property {function(data, headersGetter)|Array.<function(data, headersGetter)>} transformResponse  –
+            *      transform function or an array of such functions. The transform function takes the http
+            *      response body and headers and returns its transformed (typically deserialized) version.
+            * @property {boolean|Cache} cache  – If true, a default $http cache will be used to cache the
+            *      GET request, otherwise if a cache instance built with
+            *      {@link ng.$cacheFactory $cacheFactory}, this cache will be used for
+            *      caching.
+            * @property {number|Promise} timeout  – timeout in milliseconds, or {@link ng.$q promise}
+            *      that should abort the request when resolved.
+            * @property {boolean} withCredentials  - whether to set the `withCredentials` flag on the
+            *      XHR object.
+            * @property {string} responseType  
+            */
+
+            /**
+            * @param {string} url
+            * @param {httpConfig} [config]
+            */
+            function httpGetDocs(url, config) {
+            }
+            /**
+            * @param {string} url
+            * @param {httpConfig} [config]
+            */
+            function httpHeadDocs(url, config) { }
+            /**
+            * @param {string} url
+            * @param {httpConfig} [config]
+            */
+            function httpJsonpDocs(url, config) { }
+            /**
+            * @param {string} url
+            * @param {httpConfig} [config]
+            */
+            function httpDeleteDocs(url, config) { }
+            /**
+            * @param {string} url
+            * @param {*} data
+            * @param {httpConfig} [config]
+            */
+            function httpPostDocs(url, data, config) { }
+            /**
+            * @param {string} url
+            * @param {*} data
+            * @param {httpConfig} [config]
+            */
+            function httpPutDocs(url, data, config) {
+            }
+            /**
+            * @param {string} url
+            * @param {*} data
+            * @param {httpConfig} [config]
+            */
+            function httpPatchDocs(url, data, config) {
+            }
+
+            intellisense.annotate($delegate.get, httpGetDocs);
+            intellisense.annotate($delegate.delete, httpDeleteDocs);
+            intellisense.annotate($delegate.jsonp, httpJsonpDocs);
+            intellisense.annotate($delegate.head, httpHeadDocs);
+            intellisense.annotate($delegate.post, httpPostDocs);
+            intellisense.annotate($delegate.put, httpPutDocs);
+            intellisense.annotate($delegate.patch, httpPatchDocs);
+            return $delegate;
+        }]);
+
         // Decorate the $q service to resolve deferred objects at the end of the digest cycle.
         $provide.decorator('$q', ['$rootScope', '$delegate', function ($rootScope, $delegate) {
             var originalDefer = $delegate.defer;
@@ -391,15 +474,14 @@
         }
 
         if (requiredModuleMap[moduleName] === undefined) {
-            // Recursively process dependent modules.
-            forEach(module.requires, trackModule);
-
             logMessage(LOG_LEVEL.INFO, 'Tracking module "' + moduleName + '".');
 
             // Store the module name mapped to the names of all required modules.
             var requiredModuleNames = [moduleName];
 
+            // Recursively process dependent modules.
             forEach(module.requires, function (requiredModuleName) {
+                trackModule(requiredModuleName);
                 requiredModuleNames.splice(requiredModuleNames.length, 0, requiredModuleMap[requiredModuleName]);
             });
 
@@ -412,7 +494,9 @@
 
     function decorateModuleProviderFunctions(module) {
         function addNavBarOverride(name, providerFn, callBackDefinition) {
-            if (!intellisense.declareNavigationContainer) { return; }
+            if (!intellisense.declareNavigationContainer) {
+                return;
+            }
 
             // When the callback defintion is an array, pull the actual callback off the end
             if (angular.isArray(callBackDefinition)) {
@@ -421,7 +505,7 @@
 
             // Add an entry to the nav bar for the current provider function
             intellisense.declareNavigationContainer(
-                { callback: callBackDefinition },
+            { callback: callBackDefinition },
                 name + ' (' + providerFn + ')',
                 'vs:GlyphGroupType')
         }
@@ -451,15 +535,18 @@
 
                         // Factories, services, providers, etc.
                         logMessage(LOG_LEVEL.INFO, 'Creating instance of ' + providerFunction + ' "' + arguments[0] + '".');
-
                         addNavBarOverride(name, providerFunction, callBackDefinition);
+
+                        // Before calling the injector, make sure the JS editor knows that progress has been made.
+                        // This helps avoid a "timeout" situation.
+                        intellisense.progress();
 
                         // Initialize the component based on the provider function.
                         switch (providerFunction) {
                             case 'factory':
                             case 'service':
                                 component = injector.get(arguments[0]);
-                                
+
                                 break;
                             case 'provider':
                                 var component = arguments[1];
@@ -601,8 +688,12 @@
     function callComponentFunctions(injector, component, locals, recursionDepth) {
         // A recursion guard, to prevent this code from recursing too long and
         // causing the IntelliSense engine to timeout
-        if (!recursionDepth) { recursionDepth = 0; }
-        if (recursionDepth++ >= 2) { return; }
+        if (!recursionDepth) {
+            recursionDepth = 0;
+        }
+        if (recursionDepth++ >= 2) {
+            return;
+        }
 
         // Tell the JavaScript editor that progress is being made in building the
         // IntelliSense simulation, giving us more time to call component functions before timing out
@@ -657,8 +748,8 @@
             'it', 'xit',
             'expect',
             'module', 'inject',
-            { source: angular.mock, method: 'module' },
-            { source: angular.mock, method: 'inject' }
+            {source: angular.mock, method: 'module'},
+            {source: angular.mock, method: 'inject'}
         ];
 
         var jasmineInjector;

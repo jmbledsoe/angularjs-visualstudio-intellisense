@@ -116,6 +116,14 @@
             }
         };
     });
+
+    testApp.service("objectLiteralInteliSenseTestService", function ($q, $http) {
+        // TEST:
+        //$http.
+        //$q.
+        //$http.get('http://test', {
+        return {foo: true};
+    })
 })(angular);
 
 (function (angular) {
@@ -127,14 +135,6 @@
         // bound to a variable or globally exposed
         //routeProvider.
     }]);
-})(angular);
-
-(function (angular) {
-    angular.module("implicitNgModTest", [])
-    .controller('MyController', function ($location) {
-        // TEST: the 'ng' module should be implicitly included by default and core services "just work"
-        //$location.
-    });
 })(angular);
 
 (function (angular) {
