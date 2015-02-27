@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>AngularJS.Intellisense</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <title>AngularJS Intellilsense add on</title>
         <authors>John Bledsoe</authors>
         <owners>Shawn Cicoria</owners>
@@ -14,7 +14,9 @@
 
 For the auto-update of _references.js you can disable by setting the flag to 'false'</description>
         <summary>Provides project level support for AngularJS intellisence using an intellisense file from John Bledsoe (jmbledsoe) - https://github.com/jmbledsoe/angularjs-visualstudio-intellisense.</summary>
-        <releaseNotes>DISCLAIMER: This package is maintained by Shawn Cicoria, but is based upon the hard word of John Beldsoe who created the Intellisense support for AngularJS in Visual Studio. See his GitHub repository</releaseNotes>
+        <releaseNotes>1.0.1 - minor fix - polluted _references.js file
+		1.0.0 - initial release
+		DISCLAIMER: This package is maintained by Shawn Cicoria, but is based upon the hard word of John Beldsoe who created the Intellisense support for AngularJS in Visual Studio. See his GitHub repository</releaseNotes>
         <copyright>2015</copyright>
         <tags>angularjs, javascript, intellisense</tags>
         <dependencies>

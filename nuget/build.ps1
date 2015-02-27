@@ -3,7 +3,7 @@ Copy-Item  '..\src\scripts\angular.intellisense.js' -Destination '.\src\content\
 wget http://nuget.org/nuget.exe -OutFile nuget.exe -ErrorAction Continue
 
 if (Test-Path '.\nuget.exe'){
-	$buildCmd = {.\nuget pack src\AngularJS.Intellisense.1.0.0.nuspec -BasePath src -OutputDirectory .}
+	$buildCmd = {.\nuget pack src\AngularJS.Intellisense.nuspec -BasePath src -OutputDirectory .}
 	Invoke-Command $buildCmd
 }
 else {
