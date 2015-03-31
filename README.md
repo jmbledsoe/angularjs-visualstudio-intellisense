@@ -27,7 +27,16 @@ If you prefer to enable AngularJS intellisene for all of your web projects, simp
 
 This project is still early in its life and so may still have issues, but it is stable enough for use as-is. It provides intellisense for AngularJS components in most of the cases I have tested, although there are some code structures that it cannot figure out yet. If you encounter any issues or any scenarios in which the project isn't providing proper intellisense, please submit an issue.
 
-I hope to create a NuGet package to automate the installation of the intellisense file, so expect that soon.
+**Update: 3/27/2015**
+
+NuGet Package Created:  [AngularJS.Intellisense](https://www.nuget.org/packages/AngularJS.Intellisense/)
+
+~~~
+PM> Install-Package AngularJS.Intellisense
+
+~~~
+
+
 
 **Update: 11/10/2014**
 
