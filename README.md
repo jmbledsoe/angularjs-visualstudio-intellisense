@@ -5,13 +5,15 @@ This project provides intellisense in JavaScript files for injected AngularJS co
 
 Visual Studio 2013 provides intellisense for AngularJS directives within HTML pages, but doesn't include support for intellisense on custom AngularJS components in your project. This extension is designed to provide this support, so that you can have full member listing and statement completion on AngularJS services, factories and providers that you develop.
 
+>**Note:** This extension is now included by default in Visual Studio 2015. If you want to modify the default behavior, this extension is installed by default in the %PROGRAMFILES%\Microsoft Visual Studio 14.0\JavaScript\References folder. %PROGRAMFILES% is the location of your program files folder, usually under C:\Program Files or C:\Program Files (x86). You can overwrite this file with a new copy from this repository, but do so at your own risk.
+
 ## Usage
 
 Enabling intellisense for your custom AngularJS components is simple and can be accomplished with a few simple steps:
 
 ### Enabling Intellisense in a Single Project
 
-1. Add the [angular.intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/angular.intellisense.js) file to the same folder in your project that contains angular.js or angular.min.js.
+Add the [angular.intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/angular.intellisense.js) file to the same folder in your project that contains angular.js or angular.min.js.
 
 That's it! All of your AngularJS components should now be fully available via intellisense.
 
