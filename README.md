@@ -11,6 +11,13 @@ Visual Studio 2013 provides intellisense for AngularJS directives within HTML pa
 
 Enabling intellisense for your custom AngularJS components is simple and can be accomplished with a few simple steps:
 
+### Prerequisites
+
+In order for AngularJS Intellisense to function properly, your project needs a correctly-constructed _references.js file. See the following articles for guidance on creating a  _references.js file:
+
+-  http://madskristensen.net/post/the-story-behind-_referencesjs
+-  http://blogs.msdn.com/b/webdev/archive/2014/10/10/references-js-file-s-auto-sync-feature.aspx
+
 ### Enabling Intellisense in a Single Project
 
 Add the [angular.intellisense.js](https://raw.github.com/jmbledsoe/angularjs-visualstudio-intellisense/master/src/Scripts/angular.intellisense.js) file to the same folder in your project that contains angular.js or angular.min.js.
